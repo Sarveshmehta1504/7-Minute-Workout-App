@@ -1,6 +1,5 @@
 package com.example.a7minutesworkout
 
-import android.media.Image
 
 class ExerciseModel(
     private var id: Int,

@@ -1,5 +1,6 @@
 package com.example.a7minutesworkout
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
@@ -10,11 +11,14 @@ import android.os.CountDownTimer
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minutesworkout.databinding.ActivityExerciseBinding
 import com.example.a7minutesworkout.databinding.DialogCustomBackConfirmationBinding
-import java.util.Locale
+import java.util.*
+import kotlin.collections.ArrayList
 
+@Suppress("IMPLICIT_CAST_TO_ANY")
 class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     private var binding: ActivityExerciseBinding? = null
 
@@ -55,6 +59,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         setUpExerciseStatusRecyclerView()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         customDialogForBackButton()
     }
@@ -140,6 +145,7 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             override fun onFinish() {
                 currentExercisePosition++
 
@@ -162,18 +168,16 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
             }
 
-            override fun onFinish() {
-
-                if(currentExercisePosition < exerciseList?.size!! -1){
-                    exerciseList!![currentExercisePosition].setIsSelected(false)
-                    exerciseList!![currentExercisePosition].setIsCompleted(true)
-                    exerciseAdapter!!.notifyDataSetChanged()
-                    setupRestView()
-                }else{
-                    finish()
-                    val intent = Intent(this@ExerciseActivity,FinishActivity::class.java)
-                    startActivity(intent)
-                }
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onFinish() = if(currentExercisePosition < exerciseList?.size!! -1){
+                exerciseList!![currentExercisePosition].setIsSelected(false)
+                exerciseList!![currentExercisePosition].setIsCompleted(true)
+                exerciseAdapter!!.notifyDataSetChanged()
+                setupRestView()
+            }else{
+                finish()
+                val intent = Intent(this@ExerciseActivity,FinishActivity::class.java)
+                startActivity(intent)
             }
 
         }.start()
@@ -221,4 +225,10 @@ class ExerciseActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         binding = null
     }
+
+    private fun finishExercise(){
+        val intent = Intent(this@ExerciseActivity,FinishActivity::class.java)
+        startActivity(intent)
+    }
+
 }
